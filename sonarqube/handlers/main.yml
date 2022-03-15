@@ -1,0 +1,13 @@
+---
+  - name: Start and enable sonar service
+    systemd:
+      name: sonar.service
+      state: restarted
+      enabled: true
+      daemon_reload: true
+  
+  - name: Start PostgreSQL service
+    service: 
+      name: postgresql 
+      state: started 
+      enabled: yes

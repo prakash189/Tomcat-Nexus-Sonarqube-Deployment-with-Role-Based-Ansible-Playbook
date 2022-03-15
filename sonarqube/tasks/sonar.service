@@ -1,0 +1,18 @@
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+Environment=JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
+ExecStart=/home/ubuntu/sonarqube-9.1.0.47736/bin/linux-x86-64/sonar.sh start
+ExecStop=/home/ubuntu/sonarqube-9.1.0.47736/bin/linux-x86-64/sonar.sh stop
+
+User=ubuntu
+Group=ubuntu
+Restart=always
+LimitNOFILE=131072
+LimitNPROC=8192
+
+[Install]
+WantedBy=multi-user.target

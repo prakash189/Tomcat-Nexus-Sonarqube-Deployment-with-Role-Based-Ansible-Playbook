@@ -1,0 +1,37 @@
+---
+- hosts: nexus
+  gather_facts: false
+  become: yes
+  become_method: sudo
+  remote_user: ubuntu
+  vars_files:
+    - nexus-server/vars/main.yml
+  handlers:
+    - include: nexus-server/handlers/main.yml
+  roles:
+    - role: nexus-server
+
+- hosts: sonarqube
+  gather_facts: false
+  become: yes
+  become_method: sudo
+  remote_user: ubuntu
+  vars_files:
+    - sonarqube/vars/main.yml
+  handlers:
+    - include: sonarqube/handlers/main.yml
+  roles:
+    - role: sonarqube
+  
+- hosts: tomcat
+  gather_facts: false
+  become: yes
+  become_method: sudo
+  remote_user: ubuntu
+  vars_files:
+    - tomcat/vars/main.yml
+  handlers:
+    - include: tomcat/handlers/main.yml
+  roles:
+    - role: tomcat
+

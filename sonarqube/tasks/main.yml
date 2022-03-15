@@ -1,0 +1,149 @@
+---
+  - name: Update apt-get repo and cache
+    apt: 
+      update_cache: yes 
+      force_apt_get: yes 
+      cache_valid_time: 3600
+      
+  - name: install JDK 11
+    apt:
+      name: openjdk-11-jdk
+      state: present    
+
+  - name: install ansible
+    apt:
+      name: ansible
+      state: present
+
+  - name: install python3
+    apt:
+      name: python3
+      state: present
+  - name: install php
+    apt:
+      name: php
+      state: present
+
+  - name: install pip3
+    apt:
+      name: python3-pip
+      state: present
+
+  - name: install lxml
+    pip:
+      name: lxml 
+
+  - name: install unzip
+    apt: 
+      name: unzip
+      state: present
+
+# Download the sonarqube packages from sonar community 
+  - name: download the sonarqube community
+    unarchive:
+      src: "{{ sonarquebe_url }}"
+      dest: "{{ sonarquebe_dir }}"
+      remote_src: yes
+  
+# copy sonarqube properties file which contains postgresql db details to remote server
+
+  - name: copy sonarqube properties file to remote system
+    copy:
+       src: sonar.properties
+       dest: "{{ sonarquebe_pro_location }}"
+       mode: 0755
+
+
+  - name: Change ownership for sonarquebe
+    file:
+      path:  "{{ dir_location }}"
+      owner: "{{ sonarquebe_user }}"
+      group: "{{ sonarquebe_group }}"
+      mode: "u+rwx,g+rx,o=rx"
+      recurse: yes
+      state: directory
+
+# copy sonarqube service 
+
+  - name: Copy sonarqube service from local to remote
+    copy:
+       src: sonar.service
+       dest: /etc/systemd/system/
+       mode: 0755
+    notify:
+      - Start and enable sonar service
+
+# Install posgtresql on remote server
+
+  - name:  install ansible postgresql dependancy packages
+    package:
+      pkg: python3-psycopg2
+      state: present
+  
+  - name: add the virtual max memory
+    lineinfile:
+      path: /etc/sysctl.conf
+      state: present
+      line: "{{ item }}"
+    with_items:
+    - 'vm.max_map_count=262144'
+    - 'fs.file-max=65536'
+    - 'ulimit -n 65536'
+    - 'ulimit -u 4096'
+
+  
+  - name: Ensure bash, OpenSSl, and libssl are the latest versions
+    apt:
+      name: "{{item}}"
+      update_cache: true 
+      state: latest
+    with_items: 
+      - bash
+      - openssl
+      - libssl-dev
+      - libssl-doc
+    
+  - name: Install PostgreSQL
+    apt: 
+      name: "{{item}}"
+      state: present
+      update_cache: true 
+    with_items:
+        - postgresql
+        - postgresql-contrib
+        - libpq-dev
+    notify:
+      - Start PostgreSQL service
+
+  - name: Ensure database is created
+    postgresql_db: 
+      name: "{{ db_name }}"
+      state: present
+    become: yes
+    become_user: postgres
+
+  - name: Ensure user has access to the database
+    postgresql_user: 
+      db: "{{ db_name }}"
+      name: "{{ db_user }}"
+      password: "{{ db_password }}"
+      priv: ALL
+      state: present
+      encrypted: yes
+    become: yes
+    become_user: postgres
+    
+
+  - name: Ensure user does not have unnecessary privileges
+    postgresql_user: 
+      name: "{{ db_user }}"
+      role_attr_flags: NOSUPERUSER,NOCREATEDB
+      state: present
+    become: yes
+    become_user: postgres
+    
+  
+
+
+  
+

@@ -1,0 +1,17 @@
+---
+db_user: sonarqube
+db_name: sonarqube
+db_password: admin@123
+#db_password: !vault |
+#          $ANSIBLE_VAULT;1.1;AES256
+#          64396235653238663736306438353933346133326638363366623665626137646266626631366230
+#          3665383530356631623562383762326365616165316532300a393231636163343962633331343161
+#          33633730663663353939356338613633376535366166393065346139383063343832343263646465
+#          3961326161363239370a623732376162346161666265626335663931666136616365303665623932
+#          3164
+sonarquebe_url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.1.0.47736.zip
+sonarquebe_dir: /home/ubuntu/
+sonarquebe_pro_location: /home/ubuntu/sonarqube-9.1.0.47736/conf
+sonarquebe_user: ubuntu
+sonarquebe_group: ubuntu
+dir_location: /home/ubuntu/sonarqube-9.1.0.47736

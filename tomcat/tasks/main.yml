@@ -1,0 +1,80 @@
+---
+# install the packages on remote server as per requirements
+  - name: Update apt-get repo and cache
+    apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+      
+  - name: install JDK 11
+    apt:
+      name: openjdk-11-jdk
+      state: present    
+
+  - name: install ansible
+    apt:
+      name: ansible
+      state: present
+
+  - name: install python3
+    apt:
+      name: python3
+      state: present
+      
+  - name: install php
+    apt:
+      name: php
+      state: present
+
+  - name: install pip3
+    apt:
+      name: python3-pip
+      state: present
+
+  - name: install lxml
+    pip:
+      name: lxml
+      state: present 
+
+  - name: add tomcat group
+    group:
+      name: "{{ tomcat_group }}"
+
+  - name: add tomcat user
+    user:
+      name: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      home: "{{ tomcat_home_dir }}"
+      createhome: no
+
+  - name: create /opt/tomcat directory
+    file:
+      path: "{{ tomcat_dir }}"
+      state: directory
+      mode: 0755
+
+# Download the tomcat packages on remote server 
+  - name: download & unarchive
+    unarchive:
+      src: "{{ tomcat_url }}"
+      dest: "{{ tomcat_dir }}"
+      remote_src: yes
+      extra_opts: [--strip-components=1]
+
+  - name: Change ownership
+    file:
+      path: "{{ tomcat_dir }}"
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      mode: "u+rwx,g+rx,o=rx"
+      recurse: yes
+      state: directory
+
+  - name: Copy Tomcat service from local to remote
+    copy:
+       src: tomcat.service
+       dest: "{{ tomcat_service_location }}"
+       mode: 0755
+    notify: 
+      - Start and enable Tomcat service
+
+ 
+    
+ 

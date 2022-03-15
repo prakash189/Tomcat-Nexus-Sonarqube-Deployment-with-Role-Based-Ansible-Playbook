@@ -1,0 +1,7 @@
+---
+tomcat_user: tomcat
+tomcat_group: tomcat
+tomcat_dir: /opt/tomcat
+tomcat_url: http://apache.cs.utah.edu/tomcat/tomcat-9/v9.0.59/bin/apache-tomcat-9.0.59.tar.gz
+tomcat_service_location: /etc/systemd/system/
+tomcat_home_dir: /user/share/tomcat
