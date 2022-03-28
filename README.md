@@ -22,7 +22,7 @@ Step 2: We need to create the role for tomcat, sonarqube and Nexus server using 
 ```
 ansible-galaxy init tomcat
 ```
-It will create the below directory structure for the tomcat.
+It will create the below directory structure for the tomcat in the roles directory folder.
 
 ```
 └── roles
