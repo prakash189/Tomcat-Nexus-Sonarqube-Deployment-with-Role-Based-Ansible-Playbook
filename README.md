@@ -121,7 +121,7 @@ Then final directory structure will be like the below:
             └── main.yml
 
 ```
-Step 3: Lets create the centralized main.yml file which will contain the information of hosts, username and roles of respective servers.
+Step 3: Lets create the centralized main.yml and hosts file at root directory location which will contain the information of hosts, username and roles of respective servers.
 
 #### vi main.yml
 
