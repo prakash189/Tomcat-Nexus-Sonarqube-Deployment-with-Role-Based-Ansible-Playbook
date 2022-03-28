@@ -25,71 +25,80 @@ ansible-galaxy init tomcat
 It will create the below directory structure for the tomcat.
 
 ```
-└── tomcat
-    ├── defaults
-    │   └── main.yml
-    ├── handlers
-    │   └── main.yml
-    ├── meta
-    │   └── main.yml
-    ├── README.md
-    ├── tasks
-    │   ├── main.yml
-    ├── tests
-    │   ├── inventory
-    │   └── test.yml
-    └── vars
-        └── main.yml
+└── roles
+    └── tomcat
+        ├── defaults
+        │   └── main.yml
+        ├── handlers
+        │   └── main.yml
+        ├── meta
+        │   └── main.yml
+        ├── README.md
+        ├── tasks
+        │   ├── main.yml
+        ├── tests
+        │   ├── inventory
+        │   └── test.yml
+        └── vars
+            └── main.yml
 ```
 Same steps can be follow to create the role for the Sonarqube and Nexus application using ansible galaxy command.
 Then final directory structure will be like the below:
 
 ```
+
 ├── hosts
 ├── main.yml
-├── nexus-server
-│   ├── defaults
-│   │   └── main.yml
-│   ├── handlers
-│   │   └── main.yml
-│   ├── meta
-│   │   └── main.yml
-│   ├── tasks
-│   │   ├── main.yml
-│   ├── tests
-│   │   ├── inventory
-│   │   └── test.yml
-│   └── vars
-│       └── main.yml
-├── sonarqube
-│   ├── defaults
-│   │   └── main.yml
-│   ├── handlers
-│   │   └── main.yml
-│   ├── meta
-│   │   └── main.yml
-│   ├── tasks
-│   │   ├── main.yml
-│   ├── tests
-│   │   ├── inventory
-│   │   └── test.yml
-│   └── vars
-│       └── main.yml
-└── tomcat
-    ├── defaults
-    │   └── main.yml
-    ├── handlers
-    │   └── main.yml
-    ├── meta
-    │   └── main.yml
-    ├── README.md
-    ├── tasks
-    │   ├── main.yml
-    ├── tests
-    │   ├── inventory
-    │   └── test.yml
-    └── vars
-        └── main.yml
+├── README.md
+└── roles
+    ├── nexus-server
+    │   ├── defaults
+    │   │   └── main.yml
+    │   ├── handlers
+    │   │   └── main.yml
+    │   ├── meta
+    │   │   └── main.yml
+    │   ├── tasks
+    │   │   ├── main.yml
+    │   │   └── nexus.service
+    │   ├── tests
+    │   │   ├── inventory
+    │   │   └── test.yml
+    │   └── vars
+    │       └── main.yml
+    ├── sonarqube
+    │   ├── defaults
+    │   │   └── main.yml
+    │   ├── handlers
+    │   │   └── main.yml
+    │   ├── meta
+    │   │   └── main.yml
+    │   ├── tasks
+    │   │   ├── main.yml
+    │   │   ├── README.md
+    │   │   ├── sonar.properties
+    │   │   └── sonar.service
+    │   ├── tests
+    │   │   ├── inventory
+    │   │   └── test.yml
+    │   └── vars
+    │       └── main.yml
+    └── tomcat
+        ├── defaults
+        │   └── main.yml
+        ├── handlers
+        │   └── main.yml
+        ├── meta
+        │   └── main.yml
+        ├── tasks
+        │   ├── main.yml
+        │   └── tomcat.service
+        ├── tests
+        │   ├── inventory
+        │   └── test.yml
+        └── vars
+            └── main.yml
+
 ```
 Step 3: Lets create the centralized main.yml file which will contain the information of hosts, username and roles of respective servers.
 
@@ -103,11 +112,11 @@ Step 3: Lets create the centralized main.yml file which will contain the informa
   become_method: sudo
   remote_user: ubuntu
   vars_files:
-    - nexus-server/vars/main.yml
+    - roles/nexus-server/vars/main.yml
   handlers:
-    - include: nexus-server/handlers/main.yml
+    - include: roles/nexus-server/handlers/main.yml
   roles:
-    - role: nexus-server
+    - role: roles/nexus-server
 
 - hosts: sonarqube
   gather_facts: false
@@ -115,11 +124,11 @@ Step 3: Lets create the centralized main.yml file which will contain the informa
   become_method: sudo
   remote_user: ubuntu
   vars_files:
-    - sonarqube/vars/main.yml
+    - roles/sonarqube/vars/main.yml
   handlers:
-    - include: sonarqube/handlers/main.yml
+    - include: roles/sonarqube/handlers/main.yml
   roles:
-    - role: sonarqube
+    - role: roles/sonarqube
   
 - hosts: tomcat
   gather_facts: false
@@ -127,11 +136,11 @@ Step 3: Lets create the centralized main.yml file which will contain the informa
   become_method: sudo
   remote_user: ubuntu
   vars_files:
-    - tomcat/vars/main.yml
+    - roles/tomcat/vars/main.yml
   handlers:
-    - include: tomcat/handlers/main.yml
+    - include: roles/tomcat/handlers/main.yml
   roles:
-    - role: tomcat
+    - role: roles/tomcat
 
 ```
 These playbooks deploy implementation of Tomcat Application Server, Sonarqube and Nexus server on respective host server. To use them, first edit the hosts inventory file to contain the hostnames of the servers on which you want deployed applications, add the ansible username(client server user name) and private key path of master server user(In this example, we are using jenkins user to run the anisble playbook) and also edit the group_vars/tomcat-servers file to set any Tomcat configuration parameters you need same you can do for the Sonarqube and Nexus Server.
