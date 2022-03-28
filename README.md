@@ -24,7 +24,7 @@
           Minimum CPUs: 4
           RAM on the host: 2GB
 
-3. Jenkins on the master server from where you will be running the ansible playbook.
+3. Install Jenkins on the master server from where you will be running the ansible playbook.
 
 ## Implementation Steps
 
