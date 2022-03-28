@@ -3,7 +3,28 @@
 
 ## Pre-requisites
 
- Ubuntu 18.04
+1. Client should be a debian(Ubuntu 18.04) environment.
+
+2. Server requirements: 
+ 
+    a. Sonarqube server:
+    
+      It is highly recommended to use 2 GB memory for the sonarqube server else it will fail to start the sonarqube service.
+  
+          Minimum CPUs: 4
+          RAM on the host: 2GB
+    
+      b: Nexus server:
+  
+          Minimum CPUs: 4
+          RAM on the host: 2GB
+    
+      c: Tomcat Server:
+  
+          Minimum CPUs: 4
+          RAM on the host: 2GB
+
+3. Jenkins on the master server from where you will be running the ansible playbook.
 
 ## Implementation Steps
 
