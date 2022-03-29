@@ -74,6 +74,7 @@
        mode: 0755
     notify: 
       - Start and enable Tomcat service
+      - Restart Tomcat service
 
  
     
