@@ -7,7 +7,7 @@
       daemon_reload: true
 
       
-  - name: Start and enable Tomcat service
+  - name: Restart Tomcat service
     systemd:
       name: tomcat
       state: restarted
